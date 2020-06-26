@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Sokoban" default="compile" basedir=".">
+
+<property name="build.dir" value="build"/>
+<property name="src.dir" value="src"/>
+
+<path id="classpath">
+		<fileset dir="${basedir}/exe">
+			<include name="*.jar" />
+		</fileset>
+</path>
+	
+<target name="init" depends="clean">
+	<echo message="Initialisation de ${ant.project.name}"/>
+</target>
+
+<target name="copy" description="Copie du repertoire image" depends="init">
+	<mkdir dir="${basedir}/build"/>
+	<copy todir="${basedir}/images">
+	  <fileset dir="src/images"/>
+	</copy>
+	<copy todir="${basedir}/niveau">
+	  <fileset dir="src/niveau"/>
+	</copy>
+</target>
+
+
+<target name="compile" depends="copy">
+	<javac srcdir="src/menu/ : src/rules/ : src/soloduo/ : src/sokoban/vue/ :src/level/ : src/sokoban/ : src/sokoban/controleur/ : src/sokoban/modele/plateau/ : src/sokoban/modele/piece/ : src/sokoban/modele/piece/players/ : src/credits/" destdir="${basedir}/build"/>
+</target>
+
+
+
+<target name="clean" description="Nettoyage">
+	<delete dir="${build.dir}"/>
+	<delete dir="${basedir}/exe"/>
+	<delete dir="${basedir}/docs"/>
+	<delete dir="${basedir}/images"/>
+	<delete dir="${basedir}/niveau"/>
+</target>
+
+<target name="jar" depends="compile">
+	<mkdir dir="${basedir}/exe"/>
+	<jar destfile="${basedir}/exe/Sokoban.jar" basedir="${basedir}/build">
+		<manifest>
+			<attribute name="Main-Class" value="menu.Main"/>
+		</manifest>
+	</jar>
+</target>
+
+<target name="run" description="Execution de Sokoban" depends="javadoc">
+	<java jar="${basedir}/exe/Sokoban.jar" fork="true"> </java>
+</target>
+
+<target name="javadoc" description="Generate JavaDoc" depends="jar">
+	<mkdir dir="${basedir}/docs" />
+	<javadoc destdir="${basedir}/docs" classpathref="classpath" packagenames="*.*"
+			author="false" private="true" version="true" windowtitle="Simple Documentation">
+			<packageset dir="src" />
+	</javadoc>
+</target>
+
+</project>
